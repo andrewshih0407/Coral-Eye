@@ -1,0 +1,83 @@
+#include <DHT.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
+
+#define DHTPIN 2
+#define DHTTYPE DHT11
+#define WATER_PIN A0
+#define TRIG_PIN 7
+#define ECHO_PIN 6
+#define GREEN_LED 22
+#define YELLOW_LED 23
+#define RED_LED 24
+#define SERVO_PIN 25
+#define BUZZER_PIN 29
+#define LCD_ADDR 0x27
+#define LCD_COLS 16
+#define LCD_ROWS 2
+
+DHT dht(DHTPIN, DHTTYPE);
+Servo myServo;
+LiquidCrystal_I2C lcd(LCD_ADDR, LCD_COLS, LCD_ROWS)
+
+long duration;
+float distance;
+int waterValue;
+float temp;
+float humidity;
+
+void setup() {
+  Serial.begin(9600);
+  Serial1.begin(9600);
+  pinMode(GREEN_LED, OUTPUT);
+  pinMode(YELLOW_LED, OUTPUT);
+  pinMode(RED_LED, OUTPUT);
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+  dht.begin();
+  myServo.attach(SERVO_PIN);
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop() {
+  temp = dht.readTemperature();
+  humidity = dht.readHumidity();
+  waterValue = analogRead(WATER_PIN);
+
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  duration = pulseIn(ECHO_PIN, HIGH);
+  distance = duration * 0.034 / 2;
+
+  digitalWrite(GREEN_LED, HIGH); delay(100); digitalWrite(GREEN_LED, LOW);
+  digitalWrite(YELLOW_LED, HIGH); delay(100); digitalWrite(YELLOW_LED, LOW);
+  digitalWrite(RED_LED, HIGH); delay(100); digitalWrite(RED_LED, LOW);
+
+  myServo.write(0); delay(300);
+  myServo.write(90); delay(300);
+  myServo.write(180); delay(300);
+
+  tone(BUZZER_PIN, 1000); delay(300); noTone(BUZZER_PIN);
+
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print("T:"); lcd.print(temp); lcd.print(" H:"); lcd.print(humidity);
+  lcd.setCursor(0,1);
+  lcd.print("W:"); lcd.print(waterValue); lcd.print(" D:"); lcd.print(distance); lcd.print("cm");
+
+  Serial.print("Temp:"); Serial.print(temp); Serial.print(" C ");
+  Serial.print("Humidity:"); Serial.print(humidity); Serial.print(" % ");
+  Serial.print("Water:"); Serial.print(waterValue); Serial.print(" ");
+  Serial.print("Distance:"); Serial.print(distance); Serial.println(" cm");
+
+  Serial1.print("Temp:"); Serial1.print(temp); Serial1.print("C Hum:");
+  Serial1.print(humidity); Serial1.print("% Dist:"); Serial1.print(distance); Serial1.println("cm");
+
+  delay(2000);
+}
