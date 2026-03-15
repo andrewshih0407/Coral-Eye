@@ -11,5 +11,8 @@ Setting up PaleWatch is straightforward: upload the Arduino sketch, start the Py
 
 By fusing machine learning with embedded sensor data, PaleWatch provides a simple but powerful early warning system for coral nurseries. It’s designed to be easy to use, fully local, and focused on giving real-time feedback, helping preserve coral reefs before stress leads to bleaching or collapse.
 
-
+Demo:
 https://youtube.com/shorts/xGb1Lz5fgGM
+
+3-Min Video:
+https://www.youtube.com/watch?v=Nk7Qs-kKifs
