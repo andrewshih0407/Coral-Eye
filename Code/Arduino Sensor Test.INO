@@ -27,7 +27,7 @@ int waterValue;
 float temp;
 float humidity;
 
-void setup() {
+void setup() 
   Serial.begin(9600);
   Serial1.begin(9600);
   pinMode(GREEN_LED, OUTPUT);
@@ -42,8 +42,8 @@ void setup() {
   lcd.backlight();
 }
 
-void loop() {
-  temp = dht.readTemperature();
+void loop() 
+temp = dht.readTemperature();
   humidity = dht.readHumidity();
   waterValue = analogRead(WATER_PIN);
 
